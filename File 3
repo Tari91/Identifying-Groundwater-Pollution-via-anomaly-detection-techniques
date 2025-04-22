@@ -1,1 +1,27 @@
+import pandas as pd
+import numpy as np
+from sklearn.ensemble import IsolationForest
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Step 1: Load groundwater data
+df = pd.read_csv('groundwater_data.csv')  # Replace with your actual file path
+
+# Step 2: Data preprocessing
+df = df.dropna()
+selected_features = ['pH', 'nitrate', 'turbidity', 'conductivity']
+features = df[selected_features]
+
+# Step 3: Apply Isolation Forest
+model = IsolationForest(n_estimators=100, contamination=0.05, random_state=42)
+df['anomaly'] = model.fit_predict(features)
+df['anomaly_label'] = df['anomaly'].map({1: 'Normal', -1: 'Anomaly'})
+
+# Step 4: Visualize results
+sns.pairplot(df, hue='anomaly_label', diag_kind='kde', palette='Set2')
+plt.suptitle('Anomaly Detection in Groundwater Quality', fontsize=16, y=1.02)
+plt.show()
+
+# Step 5: Save results to file
+df.to_csv('groundwater_anomaly_results.csv', index=False)
 
