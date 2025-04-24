@@ -1,27 +1,53 @@
-import pandas as pd
 import numpy as np
-from sklearn.ensemble import IsolationForest
+import pandas as pd
 import matplotlib.pyplot as plt
+from sklearn.ensemble import IsolationForest
+from sklearn.preprocessing import StandardScaler
 import seaborn as sns
 
-# Step 1: Load groundwater data
-df = pd.read_csv('groundwater_data.csv')  # Replace with your actual file path
+# 1. Generate synthetic groundwater data
+np.random.seed(42)
 
-# Step 2: Data preprocessing
-df = df.dropna()
-selected_features = ['pH', 'nitrate', 'turbidity', 'conductivity']
-features = df[selected_features]
+# Simulate normal groundwater measurements
+n_samples = 1000
+features = {
+    'pH': np.random.normal(loc=7, scale=0.3, size=n_samples),
+    'TDS': np.random.normal(loc=500, scale=50, size=n_samples),  # Total Dissolved Solids
+    'nitrate': np.random.normal(loc=5, scale=1.5, size=n_samples),  # Nitrate mg/L
+    'arsenic': np.random.normal(loc=0.005, scale=0.002, size=n_samples),  # Arsenic mg/L
+}
 
-# Step 3: Apply Isolation Forest
-model = IsolationForest(n_estimators=100, contamination=0.05, random_state=42)
-df['anomaly'] = model.fit_predict(features)
-df['anomaly_label'] = df['anomaly'].map({1: 'Normal', -1: 'Anomaly'})
+df = pd.DataFrame(features)
 
-# Step 4: Visualize results
-sns.pairplot(df, hue='anomaly_label', diag_kind='kde', palette='Set2')
-plt.suptitle('Anomaly Detection in Groundwater Quality', fontsize=16, y=1.02)
+# 2. Inject anomalies (simulate pollution events)
+n_anomalies = 50
+anomalies = pd.DataFrame({
+    'pH': np.random.uniform(4.5, 5.5, n_anomalies),  # Acidic
+    'TDS': np.random.uniform(1000, 2000, n_anomalies),
+    'nitrate': np.random.uniform(30, 70, n_anomalies),
+    'arsenic': np.random.uniform(0.05, 0.2, n_anomalies),
+})
+
+# Add anomalies to the original dataset
+df = pd.concat([df, anomalies], ignore_index=True)
+
+# 3. Scale the data
+scaler = StandardScaler()
+df_scaled = scaler.fit_transform(df)
+
+# 4. Apply Isolation Forest for anomaly detection
+model = IsolationForest(contamination=len(anomalies) / len(df), random_state=42)
+df['anomaly'] = model.fit_predict(df_scaled)
+
+# -1 indicates anomaly, 1 indicates normal
+df['anomaly'] = df['anomaly'].map({1: 0, -1: 1})  # 1 = anomaly
+
+# 5. Visualize the results
+plt.figure(figsize=(10, 6))
+sns.scatterplot(data=df, x='TDS', y='nitrate', hue='anomaly', palette={0: "blue", 1: "red"})
+plt.title("Groundwater Quality Anomalies Detected (TDS vs Nitrate)")
+plt.xlabel("Total Dissolved Solids (mg/L)")
+plt.ylabel("Nitrate (mg/L)")
+plt.legend(title='Anomaly')
+plt.grid(True)
 plt.show()
-
-# Step 5: Save results to file
-df.to_csv('groundwater_anomaly_results.csv', index=False)
-
