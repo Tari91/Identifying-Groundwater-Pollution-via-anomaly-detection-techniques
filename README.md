@@ -1,92 +1,55 @@
-💧 Groundwater Anomaly Detection System
-A machine learning-driven solution for early detection of groundwater pollution
+# Groundwater Pollution Detection via Anomaly Detection
 
-This project offers a robust, scalable approach to monitoring groundwater quality using unsupervised anomaly detection. By analyzing deviations in chemical and physical water properties, the system identifies potential contamination events in real-time or batch data environments.
+This project demonstrates how to identify potential groundwater pollution events using unsupervised anomaly detection techniques on synthetic data.
 
-📦 Project Components
-bash
-Copy
-Edit
-├── groundwater_data.csv                # Input dataset containing sensor readings
-├── groundwater_anomaly_results.xlsx   # Output file with anomaly detection results
-├── groundwater_detection.py           # Core ML script for data processing and analysis
-├── README.md                          # Project documentation and user guide
-✅ Key Capabilities
-🧠 Intelligent Detection
-Utilizes the Isolation Forest algorithm to identify outliers in multivariate groundwater data.
+## 📊 Overview
 
-📊 Visual Reporting
-Generates intuitive pair plots to highlight abnormal readings across parameters.
+We simulate groundwater quality parameters and inject synthetic pollution events to train an Isolation Forest model. The model is used to detect anomalous samples which may represent pollution.
 
-📁 Export-Ready Output
-Automatically creates a structured Excel report with labeled anomalies.
+## 📁 Files
 
-🛠️ Fully Customizable
-Easily extendable to include new parameters, data sources, or ML models.
+- `groundwater_anomaly_detection_with_summary.xlsx`: 
+  - **Data** sheet: Contains the simulated groundwater data with an anomaly label (0 = normal, 1 = anomaly).
+  - **Summary** sheet: Shows total sample count, number of detected anomalies, and the percentage of anomalies.
 
-🧪 Analyzed Water Quality Indicators
-The current model evaluates the following attributes:
+## 🔍 Features
 
-pH
+- Synthetic dataset with realistic environmental parameters:
+  - **pH**
+  - **TDS (Total Dissolved Solids)**
+  - **Nitrate**
+  - **Arsenic**
+- Anomaly detection using `Isolation Forest`.
+- Data export to Excel with summary analysis.
 
-Nitrate concentration
+## 🧪 How It Works
 
-Turbidity
+1. **Data Simulation**:
+   - Normal groundwater conditions are generated based on typical environmental statistics.
+   - Anomalies are introduced with abnormal pollutant concentrations.
 
-Electrical conductivity
+2. **Anomaly Detection**:
+   - Scaled data is fed into the Isolation Forest model.
+   - The model flags samples that deviate from expected behavior.
 
-Additional parameters can be incorporated based on monitoring objectives:
+3. **Export & Analysis**:
+   - Results are exported to Excel.
+   - A summary sheet shows detection statistics.
 
-Heavy metals (e.g., Lead, Arsenic)
+## 🛠 Requirements
 
-Dissolved Oxygen (DO)
+- Python 3.8+
+- Libraries:
+  - `numpy`
+  - `pandas`
+  - `scikit-learn`
+  - `openpyxl`
+  - `matplotlib`
+  - `seaborn`
 
-Total Dissolved Solids (TDS)
+Install dependencies using:
 
-🚀 Quick Start Guide
-1. Install Required Packages
-bash
-Copy
-Edit
-pip install pandas scikit-learn matplotlib seaborn openpyxl
-2. Run the Detection Script
-bash
-Copy
-Edit
-python groundwater_detection.py
-This will:
-
-Clean and prepare the dataset
-
-Train an Isolation Forest model
-
-Flag anomalies in water quality
-
-Save results as groundwater_anomaly_results.xlsx
-
-Visualize feature distributions with anomaly overlays
-
-📂 Output Format
-The resulting Excel report includes all input features plus:
-
-anomaly_label → Indicates each row as 'Normal' or 'Anomaly'
-
-Ideal for integration into dashboards, alerts, or environmental reports.
-
-📈 Visual Insight
-The model outputs a seaborn pairplot that clearly distinguishes between normal and anomalous observations across multiple features. This enhances interpretability for both data scientists and field engineers.
-
-🔧 Advanced Customization
-🔍 Swap Isolation Forest with Deep Learning Autoencoders for non-linear anomaly detection
-
-🌐 Integrate with live sensor feeds via MQTT, Kafka, or REST APIs
-
-📊 Build real-time dashboards using Streamlit, Plotly Dash, or Power BI
-
-🧾 Automate report generation with PDF exports and scheduled batch runs
-
-📃 License
-This project is licensed under the MIT License — free to use, modify, and distribute for personal, academic, or commercial applications.
-
-✍️ Author
-Tarinabo williamtarinabo@gmail.com
+```bash
+pip install numpy pandas scikit-learn openpyxl matplotlib seaborn
+authour
+William williamtarinabo@gmail.com
