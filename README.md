@@ -51,5 +51,6 @@ Install dependencies using:
 
 ```bash
 pip install numpy pandas scikit-learn openpyxl matplotlib seaborn
-authour
+
+Author
 William williamtarinabo@gmail.com
